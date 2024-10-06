@@ -33,7 +33,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Load Product",
+						"name": "LoadProducts",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
