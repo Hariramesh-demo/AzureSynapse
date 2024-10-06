@@ -1,0 +1,109 @@
+{
+	"name": "LoadProductData",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "ProductText",
+					"description": "Product Text data"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimProduct",
+						"type": "DatasetReference"
+					},
+					"name": "ProductTable",
+					"description": "Product Table"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DimProduct",
+						"type": "DatasetReference"
+					},
+					"name": "DimProductTable",
+					"description": "Load Dim Product Table"
+				}
+			],
+			"transformations": [
+				{
+					"name": "MatchedProduct",
+					"description": "Matched Product data"
+				},
+				{
+					"name": "SetLoadAction",
+					"description": "Insert new, upsert existing"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ProductID as string,",
+				"          ProductName as string,",
+				"          Color as string,",
+				"          Size as string,",
+				"          ListPrice as decimal(10,0),",
+				"          Discontinued as boolean",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> ProductText",
+				"source(output(",
+				"          ProductKey as integer,",
+				"          ProductAltKey as string,",
+				"          ProductName as string,",
+				"          Color as string,",
+				"          Size as string,",
+				"          ListPrice as decimal(19,4),",
+				"          Discontinued as boolean",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> ProductTable",
+				"ProductText, ProductTable lookup(ProductID == ProductAltKey,",
+				"     multiple: false,",
+				"     pickup: 'last',",
+				"     asc(ProductKey, true),",
+				"     broadcast: 'auto')~> MatchedProduct",
+				"MatchedProduct alterRow(insertIf(isNull(ProductID)),",
+				"     upsertIf(not(isNull(ProductID)))) ~> SetLoadAction",
+				"SetLoadAction sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ProductKey as integer,",
+				"          ProductAltKey as string,",
+				"          ProductName as string,",
+				"          Color as string,",
+				"          Size as string,",
+				"          ListPrice as decimal(19,4),",
+				"          Discontinued as boolean",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:['ProductAltKey'],",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ProductAltKey = ProductKey,",
+				"          Color = ProductText@Color,",
+				"          Size = ProductText@Size,",
+				"          ListPrice = ProductText@ListPrice,",
+				"          Discontinued = ProductText@Discontinued",
+				"     )) ~> DimProductTable"
+			]
+		}
+	}
+}
