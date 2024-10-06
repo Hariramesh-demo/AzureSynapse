@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DelimitedText1",
+						"referenceName": "DimProduct",
 						"type": "DatasetReference"
 					},
 					"name": "ProductText",
@@ -43,16 +43,19 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          ProductID as integer,",
+				"          ProductKey as integer,",
+				"          ProductAltKey as string,",
 				"          ProductName as string,",
 				"          Color as string,",
 				"          Size as string,",
-				"          ListPrice as decimal(10,0),",
+				"          ListPrice as decimal(19,4),",
 				"          Discontinued as boolean",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> ProductText",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table',",
+				"     staged: true) ~> ProductText",
 				"source(output(",
 				"          ProductKey as integer,",
 				"          ProductAltKey as string,",
@@ -67,7 +70,7 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table',",
 				"     staged: true) ~> ProductTable",
-				"ProductText, ProductTable lookup(ProductID == ProductAltKey,",
+				"ProductText, ProductTable lookup(ProductID == ProductTable@ProductAltKey,",
 				"     multiple: false,",
 				"     pickup: 'last',",
 				"     asc(ProductKey, true),",
