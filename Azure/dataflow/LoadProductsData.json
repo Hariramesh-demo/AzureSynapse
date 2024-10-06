@@ -67,7 +67,7 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table',",
 				"     staged: true) ~> ProductTable",
-				"ProductText, ProductTable lookup(ProductID == ProductTable@ProductAltKey,",
+				"ProductText, ProductTable lookup(ProductID == ProductAltKey,",
 				"     multiple: false,",
 				"     pickup: 'last',",
 				"     asc(ProductKey, true),",
