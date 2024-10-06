@@ -7,6 +7,11 @@
 			"metadata": "Workspace name",
 			"defaultValue": "synapsegb0if1o"
 		},
+		"Data_Warehouses_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Data_Warehouses'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=synapsegb0if1o.sql.azuresynapse.net;Initial Catalog=sqlgb0if1o"
+		},
 		"Datawarehouse_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Datawarehouse'",
@@ -46,7 +51,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "LoadProductData",
+								"referenceName": "LoadProductsData",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -77,7 +82,7 @@
 				"lastPublishTime": "2024-10-06T09:56:19Z"
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/dataflows/LoadProductData')]",
+				"[concat(variables('workspaceId'), '/dataflows/LoadProductsData')]",
 				"[concat(variables('workspaceId'), '/linkedServices/synapsegb0if1o-WorkspaceDefaultStorage')]"
 			]
 		},
@@ -141,7 +146,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Datawarehouse",
+					"referenceName": "Data_Warehouses",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -185,7 +190,81 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/Datawarehouse')]"
+				"[concat(variables('workspaceId'), '/linkedServices/Data_Warehouses')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Products_Csv')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "synapsegb0if1o-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Product.csv",
+						"folderPath": "data",
+						"fileSystem": "files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ProductID",
+						"type": "String"
+					},
+					{
+						"name": "ProductName",
+						"type": "String"
+					},
+					{
+						"name": "Color",
+						"type": "String"
+					},
+					{
+						"name": "Size",
+						"type": "String"
+					},
+					{
+						"name": "ListPrice",
+						"type": "String"
+					},
+					{
+						"name": "Discontinued",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/synapsegb0if1o-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Data_Warehouses')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "SQl Pool",
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('Data_Warehouses_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
 			]
 		},
 		{
@@ -271,7 +350,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/LoadProductData')]",
+			"name": "[concat(parameters('workspaceName'), '/LoadProductsData')]",
 			"type": "Microsoft.Synapse/workspaces/dataflows",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -280,7 +359,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "DelimitedText1",
+								"referenceName": "Products_Csv",
 								"type": "DatasetReference"
 							},
 							"name": "ProductText",
@@ -324,7 +403,7 @@
 						"          ListPrice as decimal(10,0),",
 						"          Discontinued as boolean",
 						"     ),",
-						"     allowSchemaDrift: true,",
+						"     allowSchemaDrift: false,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> ProductText",
 						"source(output(",
@@ -336,7 +415,7 @@
 						"          ListPrice as decimal(19,4),",
 						"          Discontinued as boolean",
 						"     ),",
-						"     allowSchemaDrift: true,",
+						"     allowSchemaDrift: false,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
 						"     format: 'table',",
@@ -381,7 +460,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/DelimitedText1')]",
+				"[concat(variables('workspaceId'), '/datasets/Products_Csv')]",
 				"[concat(variables('workspaceId'), '/datasets/DimProduct')]"
 			]
 		},
