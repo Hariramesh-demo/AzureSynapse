@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "LoadProductData",
+						"referenceName": "LoadProductsData",
 						"type": "DataFlowReference"
 					},
 					"staging": {

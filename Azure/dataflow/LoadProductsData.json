@@ -1,5 +1,5 @@
 {
-	"name": "LoadProductData",
+	"name": "LoadProductsData",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -43,7 +43,7 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          ProductID as string,",
+				"          ProductID as integer,",
 				"          ProductName as string,",
 				"          Color as string,",
 				"          Size as string,",
