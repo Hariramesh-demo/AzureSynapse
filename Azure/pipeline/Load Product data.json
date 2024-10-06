@@ -24,7 +24,7 @@
 							"referenceName": "synapsegb0if1o-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
 						},
-						"folderPath": "Files/Stage_Product"
+						"folderPath": "files/synapse"
 					},
 					"compute": {
 						"coreCount": 8,
