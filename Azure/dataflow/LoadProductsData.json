@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DimProduct",
+						"referenceName": "Products_Csv",
 						"type": "DatasetReference"
 					},
 					"name": "ProductText",
@@ -43,19 +43,16 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          ProductKey as integer,",
-				"          ProductAltKey as string,",
+				"          ProductID as string,",
 				"          ProductName as string,",
 				"          Color as string,",
 				"          Size as string,",
-				"          ListPrice as decimal(19,4),",
+				"          ListPrice as decimal(10,0),",
 				"          Discontinued as boolean",
 				"     ),",
-				"     allowSchemaDrift: true,",
+				"     allowSchemaDrift: false,",
 				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table',",
-				"     staged: true) ~> ProductText",
+				"     ignoreNoFilesFound: false) ~> ProductText",
 				"source(output(",
 				"          ProductKey as integer,",
 				"          ProductAltKey as string,",
@@ -65,7 +62,7 @@
 				"          ListPrice as decimal(19,4),",
 				"          Discontinued as boolean",
 				"     ),",
-				"     allowSchemaDrift: true,",
+				"     allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table',",
