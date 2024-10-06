@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "synapsegb0if1o"
+		},
+		"Datawarehouse_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=synapsegb0if1o.sql.azuresynapse.net;Initial Catalog=sqlgb0if1o"
+		},
+		"synapsegb0if1o-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapsegb0if1o.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"synapsegb0if1o-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://datalakegb0if1o.dfs.core.windows.net"
+		}
+	}
+}
