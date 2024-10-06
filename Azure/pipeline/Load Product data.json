@@ -20,7 +20,11 @@
 						"type": "DataFlowReference"
 					},
 					"staging": {
-						"folderPath": ""
+						"linkedService": {
+							"referenceName": "synapsegb0if1o-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "files/stage_products"
 					},
 					"compute": {
 						"coreCount": 8,
