@@ -2,7 +2,7 @@
 	"name": "DimProduct",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Datawarehouse",
+			"referenceName": "Data_Warehouses",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
