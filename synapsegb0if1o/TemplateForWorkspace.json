@@ -419,7 +419,7 @@
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
 						"     format: 'table',",
-						"     staged: true) ~> ProductTable",
+						"     staged: false) ~> ProductTable",
 						"ProductText, ProductTable lookup(ProductID == ProductAltKey,",
 						"     multiple: false,",
 						"     pickup: 'last',",
