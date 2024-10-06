@@ -1,0 +1,15 @@
+{
+	"name": "Data_Warehouses",
+	"properties": {
+		"description": "SQl Pool",
+		"annotations": [],
+		"type": "AzureSqlDW",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=synapsegb0if1o.sql.azuresynapse.net;Initial Catalog=sqlgb0if1o"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
